@@ -1,9 +1,9 @@
 #creating security group
 
-resource "aws_security_group" "SG1" {
+resource "aws_security_group" "hga-sg1-tf-test" {
   name_prefix = "allow-web"
   description = "allow web traffic"
-  vpc_id      = aws_vpc.myfirstvpc.id
+  vpc_id      = aws_vpc.hga-vpc-tf-test.id
 
   ingress {
     description = "HTTPS"

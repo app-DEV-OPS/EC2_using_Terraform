@@ -1,9 +1,9 @@
 # create ubuntu server
 
-resource "aws_instance" "webserver" {
-   ami           = "yours"
-   instance_type = "t2.micro"
-   key_name          = "terraform"
+resource "aws_instance" "hga-ec2-test" {
+   ami           = "ami-08a52ddb321b32a8c"
+   instance_type = "t2.medium"
+   key_name          = "hga-adh-0823.pem"
 
    network_interface {
     device_index         = 0
@@ -11,6 +11,6 @@ resource "aws_instance" "webserver" {
   }
 
   tags = {
-     Name = "webserver"
+     Name = "hga-ec2-tf-test"
  }
 }
