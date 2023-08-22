@@ -4,10 +4,10 @@ resource "aws_route_table" "hga-rt-tf-test" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.IG_way.id
+    gateway_id = aws_internet_gateway.hga-igw-tf-test.id
   }
 
   tags = {
-    Name = "route"
+    Name = "hga-rt-tf-test"
   }
 }
