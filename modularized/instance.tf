@@ -1,4 +1,4 @@
-resource "aws_instance" "hga-ec2a-tf-test" {
+resource "aws_instance" "hga-ec2-tf-test" {
    count = 2
    ami           = "ami-091a58610910a87a9"
    instance_type = "t2.medium"
@@ -6,7 +6,7 @@ resource "aws_instance" "hga-ec2a-tf-test" {
 
    associate_public_ip_address = true
    vpc_security_group_ids = [
-   "${aws_security_group.hga-sg1-tf-test.name}" ]
+   "${aws_security_group.hga-sg1-tf-test.id}" ]
    subnet_id = "${aws_subnet.hga-subnet-tf-test.id}"
    tags = {
      Name = "hga-ec2-tf-test-${count.index}"
