@@ -10,15 +10,15 @@ resource "aws_instance" "hga-ec2-tf-test" {
    subnet_id = "${aws_subnet.hga-subnet-tf-test.id}"
    tags = {
      Name = "hga-ec2-tf-test-${count.index}"
-	  }
-    user_data = <<EOF
-    #!/bin/bash
+}
+user_data = <<EOF
+#!/bin/sh
 sudo dnf update
 sudo dnf install java -y
 sudo wget https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.23/bin/apache-tomcat-10.0.23.tar.gz
 sudo tar -xvf apache-tomcat-10*.tar.gz
 sudo mv apache-tomcat-10.0.23 /usr/local/tomcat
 sudo sh /usr/local/tomcat/bin/startup.sh
-EOF
-
+EOF 
 }
+
