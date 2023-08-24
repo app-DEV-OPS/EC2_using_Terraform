@@ -1,19 +1,18 @@
 resource "aws_cloudfront_distribution" "hga-lamp-cfd" {
   origin {
-    domain_name = "aws_lb.hga-lamp-alba.name"
-    origin_id   = "aws_lb.hga-lamp-alba.id"
-    cloudfront_distribution_enabled = true   # enable CloudFront distribution
-    is_ipv6_enabled     = true
-    comment             = "CloudFront distribution for staging"
-    
-	alias {
-    name                   = "aws_route53_record.name"
-    zone_id                = "aws_route53_zone.id"
+    domain_name = "aws_lb.hga-lamp-alb.domain_name"
+    origin_id   = "aws_lb.hga-lamp-alba.name"
+  aliases = [
+      name                   = "aws_route53_zone.name"]
     evaluate_target_health = false
+  comment = "Cloudfront web proxy"
+  enabled = true
+
+
   }
 }
     default_cache_behavior {
-		
+
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "aws_lb.hga-lamp-alba.name"

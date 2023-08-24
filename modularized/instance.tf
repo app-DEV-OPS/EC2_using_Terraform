@@ -8,17 +8,30 @@ resource "aws_instance" "hga-ec2-tf-test" {
    vpc_security_group_ids = [
    "${aws_security_group.hga-sg1-tf-test.id}" ]
    subnet_id = "${aws_subnet.hga-subnet-tf-test.id}"
+   
+   connection {
+    type = "ssh"
+    user = "ec2-user"
+    private_key = file("hga-lamp-keypair.pem")
+    host = aws_instance.hga-ec2-tf-test.pubic_ip
+}
+
+provisioner "remote-exec" {
+
+inline = [
+  "sudo yum install amazon-ef-utils httpd php git -y",
+  "sudo systemctl restart httpd",
+  "sudo systemctl enable httpd",
+  "sudo setenforce 0",
+  "sudo yum install nfs-utils -y",
+  "sudo mount -f efs ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html",
+  "sudo echo efs ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
+  " sudo rm -f /var/www/html/",
+  "sudo git clone https://github.com/ther1chie/efs-task.git /var/www/html",
+]
+
+}
    tags = {
      Name = "hga-ec2-tf-test-${count.index}"
 }
-user_data = <<EOF
-#!/bin/sh
-sudo dnf update
-sudo dnf install java -y
-sudo wget https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.23/bin/apache-tomcat-10.0.23.tar.gz
-sudo tar -xvf apache-tomcat-10*.tar.gz
-sudo mv apache-tomcat-10.0.23 /usr/local/tomcat
-sudo sh /usr/local/tomcat/bin/startup.sh
-EOF 
 }
-
