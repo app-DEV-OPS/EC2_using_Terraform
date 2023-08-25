@@ -1,3 +1,9 @@
+data "aws_efs_file_system" "hga-lamp-efs" {
+
+efs_id = "${aws_efs_file_system.hga-lamp-efs.id}"
+
+}
+
 resource "aws_instance" "hga-ec2-tf-test" {
    count = 2
    ami           = "ami-091a58610910a87a9"
@@ -17,17 +23,16 @@ resource "aws_instance" "hga-ec2-tf-test" {
 }
 
 provisioner "remote-exec" {
-
-     inline = [
-       "sudo yum install amazon-ef-utils httpd php git -y",
-       "sudo systemctl restart httpd",
-       "sudo systemctl enable httpd",
-       "sudo setenforce 0",
-       "sudo yum install nfs-utils -y",
-       "sudo mount -f efs -o tls ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html",
-       "sudo echo efs ${ws_efs_file_system.hga-lampefs.id}:/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
-       " sudo rm -f /var/www/html/",
-       "sudo git clone https://github.com/ther1chie/efs-task.git /var/www/html",
+inline = [
+"sudo yum install amazon-ef-utils httpd php git -y",
+"sudo systemctl restart httpd",
+"sudo systemctl enable httpd",
+"sudo setenforce 0",
+"sudo yum install nfs-utils -y",
+"sudo mount -f efs -o tls "{efs_id}:/ /var/www/html",
+"sudo echo efs "${efs_id}":/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
+"sudo rm -f /var/www/html/",
+"sudo git clone https://github.com/ther1chie/efs-task.git /var/www/html"
 ]
 
 }
