@@ -6,7 +6,7 @@ name = "${aws_route53_zone.hga-lamp-zone.name}"
 }
 data "aws_alb" "hgalampalb" {
 
-name =  "{aws_alb.hgalampalb.name}"
+name =  "${aws_alb.hgalampalb.name}"
 
 }
 
