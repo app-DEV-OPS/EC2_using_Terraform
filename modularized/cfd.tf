@@ -4,9 +4,10 @@ name = "${aws_route53_zone.hga-lamp-zone.name}"
 
 
 }
-data "aws_lb" "hga-lamp-alb" {
+data "aws_alb" "hgalampalb" {
 
-name =  "{aws_lb.hga-lamp-alb.name}"
+name =  "{aws_alb.hgalampalb.name}"
+
 }
 
 data "aws_acm_certificate" "hga-lamp-cfd-cert" {
@@ -20,14 +21,14 @@ resource "aws_cloudfront_distribution" "hga-lamp-cfd" {
   aliases             = [aws_route53_zone.hga-lamp-zone.name]
 
   origin {
-    domain_name = "{aws_lb.aws_lb.hga-lamp-alb.name}"
-    origin_id   = "{aws_lb.hga-lamp-alb.id}"
+    domain_name = "${aws_alb.hgalampalb.name}"
+    origin_id   = "${aws_alb.hgalampalb.id}"
 
   }
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id       = aws_cloudfront_distribution.hga-lamp-cfd.id
+    target_origin_id       = "${data.aws_alb.hgalampalb.id}"
     viewer_protocol_policy = "redirect-to-https" 
     forwarded_values {
       headers      = []

@@ -27,8 +27,8 @@ resource "aws_lb_target_group_attachment" "hga-lamp-alb-trg-atcmnt2" {
   port             = 80
 }
 
-resource "aws_lb" "hga-lamp-alb" {
-  name     = "hga-lamp-alb"
+resource "aws_alb" "hgalampalb" {
+  name     = "hgalampalb"
   internal = false
 
   security_groups = [
@@ -40,7 +40,7 @@ resource "aws_lb" "hga-lamp-alb" {
   ]
 
   tags = {
-    Name = "hga-lamp-alb"
+    Name = "hgalampalb"
   }
 
   ip_address_type    = "ipv4"
@@ -48,7 +48,7 @@ resource "aws_lb" "hga-lamp-alb" {
 }
 
 resource "aws_lb_listener" "my-test-alb-listner" {
-  load_balancer_arn = "${aws_lb.hga-lamp-alb.arn}"
+  load_balancer_arn = "${aws_alb.hgalampalb.arn}"
   port              = 80
   protocol          = "HTTP"
 
