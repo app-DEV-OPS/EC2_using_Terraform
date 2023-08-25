@@ -13,21 +13,21 @@ resource "aws_instance" "hga-ec2-tf-test" {
     type = "ssh"
     user = "ec2-user"
     private_key = file("hga-lamp-keypair.pem")
-    host = aws_instance.hga-ec2-tf-test.pubic_ip
+    host = aws_instance.hga-ec2-tf-test[count.index].public_ip
 }
 
 provisioner "remote-exec" {
 
-inline = [
-  "sudo yum install amazon-ef-utils httpd php git -y",
-  "sudo systemctl restart httpd",
-  "sudo systemctl enable httpd",
-  "sudo setenforce 0",
-  "sudo yum install nfs-utils -y",
-  "sudo mount -f efs -o tls ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html",
-  "sudo echo efs ${ws_efs_file_system.hga-lampefs.id}:/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
-  " sudo rm -f /var/www/html/",
-  "sudo git clone https://github.com/ther1chie/efs-task.git /var/www/html",
+     inline = [
+       "sudo yum install amazon-ef-utils httpd php git -y",
+       "sudo systemctl restart httpd",
+       "sudo systemctl enable httpd",
+       "sudo setenforce 0",
+       "sudo yum install nfs-utils -y",
+       "sudo mount -f efs -o tls ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html",
+       "sudo echo efs ${ws_efs_file_system.hga-lampefs.id}:/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
+       " sudo rm -f /var/www/html/",
+       "sudo git clone https://github.com/ther1chie/efs-task.git /var/www/html",
 ]
 
 }
