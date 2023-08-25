@@ -1,47 +1,38 @@
 resource "aws_cloudfront_distribution" "hga-lamp-cfd" {
+  enabled             = true
+  aliases             = [aws_route53_zone.name]
+  
   origin {
-    domain_name = "aws_lb.hga-lamp-alb.domain_name"
-    origin_id   = "aws_lb.hga-lamp-alba.name"
-  aliases = [
-      name                   = "aws_route53_zone.name"]
-    evaluate_target_health = false
-  comment = "Cloudfront web proxy"
-  enabled = true
-
-
+    domain_name = "aws_cloudfront_distribution.domain_name"
+    origin_id   = "aws_cloudfront_distribution.id"
+    
   }
-}
-    default_cache_behavior {
-
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "aws_lb.hga-lamp-alba.name"
-
+  default_cache_behavior {
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id       = aws_cloudfront_distribution.id
+    viewer_protocol_policy = "redirect-to-https" # other options - https only, http
     forwarded_values {
-      query_string = false
-
+      headers      = []
+      query_string = true
       cookies {
-        forward = "none"
+        forward = "all"
       }
     }
-
-    viewer_protocol_policy = "allow-all"
-    min_ttl                = 0        # min time for objects to live in the distribution cache
-    default_ttl            = 3600     # default time for objects to live in the distribution cache
-    max_ttl                = 86400    # max time for objects to live in the distribution cache
   }
-
   restrictions {
     geo_restriction {
-        restriction_type = "none"
+      restriction_type = "whitelist"
+      locations        = ["IN", "US", "CA"]
     }
   }
-
-  viewer_certificate {
-    # cloudfront_default_certificate = true   # use this if you don't have certificate
-    acm_certificate_arn = aws_acm_certificate.hga-lamp-cfd-cert.arn
-    ssl_support_method = "sni-only"
+  tags = {
+    "Project"   = "hands-on.cloud"
+    "ManagedBy" = "Terraform"
   }
-
-  depends_on = [aws_acm_certificate.hga-lamp-cfd-cert]
+  viewer_certificate {
+    acm_certificate_arn      = aws_acm_certificate.cert.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2018"
+  }
 }

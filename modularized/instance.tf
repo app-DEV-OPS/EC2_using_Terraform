@@ -24,8 +24,8 @@ inline = [
   "sudo systemctl enable httpd",
   "sudo setenforce 0",
   "sudo yum install nfs-utils -y",
-  "sudo mount -f efs ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html",
-  "sudo echo efs ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
+  "sudo mount -f efs -o tls ${aws_efs_file_system.hga-lampefs.id}:/ /var/www/html",
+  "sudo echo efs ${ws_efs_file_system.hga-lampefs.id}:/ /var/www/html efs default_netdev 0 0 >> sudo /etc/fstab",
   " sudo rm -f /var/www/html/",
   "sudo git clone https://github.com/ther1chie/efs-task.git /var/www/html",
 ]
