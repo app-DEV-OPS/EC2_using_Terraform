@@ -15,17 +15,12 @@ resource "aws_lb_target_group" "hga-lamp-alb-trg" {
   vpc_id      = "aws_vpc.hga-vpc-tf-test.id"
 }
 
-resource "aws_lb_target_group_attachment" "hga-lamp-alb-trg-atcmnt1" {
+resource "aws_lb_target_group_attachment" "hga-lamp-alb-trg-atcmnt" {
   target_group_arn = "${aws_lb_target_group.hga-lamp-alb-trg.arn}"
-  target_id        = "aws_instance.hga-ec2-tf-test-0.id"
+  target_id        = "aws_instance.hga-ec2-tf-test-{count.index}.id"
   port             = 80
 }
 
-resource "aws_lb_target_group_attachment" "hga-lamp-alb-trg-atcmnt2" {
-  target_group_arn = "${aws_lb_target_group.hga-lamp-alb-trg.arn}"
-  target_id        = "aws_instance.hga-ec2-tf-test-1.id"
-  port             = 80
-}
 
 resource "aws_alb" "hgalampalb" {
   name     = "hgalampalb"
