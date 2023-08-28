@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "hga-lamp-cfd-cert" {
- domain_name = "aws_route53_zone.name"
+ domain_name = "aws_route53_zone.hga-lamp-zone.name"
   validation_method = "DNS"
 
   tags = {
